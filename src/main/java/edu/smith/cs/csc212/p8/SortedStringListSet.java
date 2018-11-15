@@ -8,8 +8,9 @@ import java.util.List;
 
 /**
  * This is an alternate implementation of a dictionary, based on a sorted list.
- * It often makes the most sense if the dictionary never changes (compared to a TreeMap).
- * You could write a delete, but it's tricky.
+ * It often makes the most sense if the dictionary never changes (compared to a
+ * TreeMap). You could write a delete, but it's tricky.
+ * 
  * @author jfoley
  */
 public class SortedStringListSet extends AbstractSet<String> {
@@ -17,9 +18,10 @@ public class SortedStringListSet extends AbstractSet<String> {
 	 * This is the sorted list of data.
 	 */
 	private List<String> data;
-	
+
 	/**
 	 * This is the constructor: we take in data, copy and sort it (just to be sure).
+	 * 
 	 * @param data the input list.
 	 */
 	public SortedStringListSet(List<String> data) {
@@ -34,7 +36,7 @@ public class SortedStringListSet extends AbstractSet<String> {
 	public Iterator<String> iterator() {
 		return data.iterator();
 	}
-	
+
 	/**
 	 * This method takes an object because it was invented before Java 5.
 	 */
@@ -42,17 +44,38 @@ public class SortedStringListSet extends AbstractSet<String> {
 	public boolean contains(Object key) {
 		return binarySearch((String) key, 0, this.data.size()) >= 0;
 	}
-	
+
 	/**
-	 * TODO: replace this binarySearch with your own.
-	 * @param query  - the string to look for.
+	 * @param query - the string to look for.
 	 * @param start - the left-hand side of this search (inclusive)
-	 * @param end - the right-hand side of this search (exclusive)
+	 * @param end   - the right-hand side of this search (exclusive)
 	 * @return the index found, OR negative if not found.
 	 */
 	private int binarySearch(String query, int start, int end) {
-		// TODO: replace this with your own binary search.
-		return Collections.binarySearch(this.data.subList(start, end), query);
+		return Collections.binarySearch(data, query);
+//		int mid = (start+end)/2;
+//		
+//		if(start>end) {
+//			return -1;
+//		}
+//		if(start==end) {
+//			return -1;
+//		}
+//		if (data.get(mid).equals(query)) {
+//			return mid;
+//		}
+//
+//		else if (data.get(mid).compareTo(query) < 0) {
+//			start = mid + 1;
+//			return binarySearch(query, start, end);
+//		}
+//
+//		else if (data.get(mid).compareTo(query) > 0){
+//			end = mid - 1;
+//			return binarySearch(query, start, end);
+//		}
+//		
+//		return -1;
 	}
 
 	/**

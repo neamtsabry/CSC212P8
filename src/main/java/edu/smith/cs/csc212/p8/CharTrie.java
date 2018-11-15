@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 /**
  * This is a Character Trie that stores Strings!
+ * 
  * @author jfoley
  *
  */
@@ -27,7 +28,7 @@ public class CharTrie extends AbstractSet<String> {
 		root.insert(chars);
 		size++;
 	}
-	
+
 	public boolean contains(Object o) {
 		String word = (String) o;
 		LinkedList<Character> chars = new LinkedList<>();
@@ -36,9 +37,10 @@ public class CharTrie extends AbstractSet<String> {
 		}
 		return root.find(chars);
 	}
-	
+
 	/**
-	 * Every node in a Trie may have many links (to future letters) AND it may be the "terminal" state of a word.
+	 * Every node in a Trie may have many links (to future letters) AND it may be
+	 * the "terminal" state of a word.
 	 */
 	private static class Node {
 		/**
@@ -49,7 +51,7 @@ public class CharTrie extends AbstractSet<String> {
 		 * This is an array of links.
 		 */
 		Node[] links;
-		
+
 		/**
 		 * Construct a new node (with space for 27 links!).
 		 */
@@ -57,9 +59,10 @@ public class CharTrie extends AbstractSet<String> {
 			this.terminal = false;
 			this.links = new Node[27];
 		}
-		
+
 		/**
 		 * This maps a character to it's index in our array of links.
+		 * 
 		 * @param c (a letter, a-z or a hyphen.)
 		 * @return 0-25 for a-z and - for 26
 		 */
@@ -69,29 +72,35 @@ public class CharTrie extends AbstractSet<String> {
 				return this.links.length - 1;
 			}
 			if (lower > 'z' || lower < 'a') {
-				throw new RuntimeException("Bad character: "+lower);
+				return -1;
 			}
-			return lower - 'a';	
+			return lower - 'a';
 		}
-		
+
 		/**
 		 * Insert a word in this trie (or a suffix of a word, because recursion).
+		 * 
 		 * @param chars - a list of characters that used to be a word.
 		 */
 		public void insert(LinkedList<Character> chars) {
 			if (chars.isEmpty()) {
 				this.terminal = true;
 			} else {
-				int link = getLinkIndex(chars.pollFirst());
+				char c = chars.pollFirst();
+				int link = getLinkIndex(c);
+				if (link == -1) {
+					throw new RuntimeException("Bad Character: " + c);
+				}
 				if (links[link] == null) {
 					links[link] = new Node();
 				}
 				links[link].insert(chars);
 			}
 		}
-		
+
 		/**
 		 * Find a word in this trie (or a suffix of a word, because recursion).
+		 * 
 		 * @param chars - a list of characters that used to be a word.
 		 * @return true if this trie contains that word.
 		 */
@@ -100,29 +109,38 @@ public class CharTrie extends AbstractSet<String> {
 				return this.terminal;
 			} else {
 				int link = getLinkIndex(chars.pollFirst());
+				if (link == -1) {
+					return false;
+				}
 				if (links[link] == null) {
 					return false;
 				}
 				return links[link].find(chars);
 			}
 		}
-		
+
 		/**
 		 * Incomplete method to compute how many nodes are in this Trie. Recursive.
+		 * 
 		 * @return the count of nodes that exist in the Trie, starting from here.
 		 */
 		public int countNodes() {
 			int count = 1;
 			// loop over links
-			// if they're not null
+			for (Node current : links) {
+				if (current != null) {
+					// if they're not null
+					count += current.countNodes();
+				}
+			}
 			// count them, too
 			return count;
 		}
 	}
-	
+
 	/**
-	 * How do you count the nodes in this Trie?
-	 * Recursion!
+	 * How do you count the nodes in this Trie? Recursion!
+	 * 
 	 * @return the number of nodes in the trie.
 	 */
 	public int countNodes() {
@@ -130,8 +148,8 @@ public class CharTrie extends AbstractSet<String> {
 	}
 
 	/**
-	 * We would need to create an object that kept the recursion state around.
-	 * We will talk about depth-first search (part of the solution to this) next week.
+	 * We would need to create an object that kept the recursion state around. We
+	 * will talk about depth-first search (part of the solution to this) next week.
 	 */
 	@Override
 	public Iterator<String> iterator() {
@@ -139,7 +157,8 @@ public class CharTrie extends AbstractSet<String> {
 	}
 
 	/**
-	 * Just keeping track of the size is cheap. We could also count terminal nodes...
+	 * Just keeping track of the size is cheap. We could also count terminal
+	 * nodes...
 	 */
 	@Override
 	public int size() {
