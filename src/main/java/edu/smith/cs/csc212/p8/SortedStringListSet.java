@@ -52,30 +52,56 @@ public class SortedStringListSet extends AbstractSet<String> {
 	 * @return the index found, OR negative if not found.
 	 */
 	private int binarySearch(String query, int start, int end) {
-		return Collections.binarySearch(data, query);
-//		int mid = (start+end)/2;
-//		
-//		if(start>end) {
-//			return -1;
-//		}
-//		if(start==end) {
-//			return -1;
-//		}
-//		if (data.get(mid).equals(query)) {
-//			return mid;
-//		}
-//
-//		else if (data.get(mid).compareTo(query) < 0) {
-//			start = mid + 1;
-//			return binarySearch(query, start, end);
-//		}
-//
-//		else if (data.get(mid).compareTo(query) > 0){
-//			end = mid - 1;
-//			return binarySearch(query, start, end);
+		// return Collections.binarySearch(data, query);
+		
+		/*
+		 * This part of the code is searching for the item iteratively.
+		 * It goes to the middle, checks the items before it and after.
+		 * It keeps doing this until it finds query
+		 */
+		
+//		start=0;
+//		end = this.data.size()-1;
+//		while(start<=end) {
+//			int mid = start+((end-start)/2);
+//			if(this.data.get(mid).compareTo(query) == 0) {
+//				return mid;
+//			}
+//			else if(this.data.get(mid).compareTo(query) < 0) {
+//				start = mid+1;
+//		    }
+//			else {
+//				end = mid - 1;
+//			}
 //		}
 //		
 //		return -1;
+		
+		/*
+		 * I also tried recursively, which works the same way but 
+		 * keeps calling the method until it finds query. It works 
+		 * perfectly. 
+		 */
+		
+		if(start>=end) {
+			return -1;
+		}
+		
+		else {
+			int mid = start+((end-start)/2);
+			if (data.get(mid).compareTo(query) < 0) {
+				//start = mid + 1;
+				return binarySearch(query, mid + 1, end);
+			}
+
+			else if (data.get(mid).compareTo(query) > 0){
+				//end = mid - 1;
+				return binarySearch(query, start, mid);
+			}
+			else {
+				return mid;
+			}
+		}
 	}
 
 	/**
